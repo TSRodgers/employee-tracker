@@ -106,7 +106,7 @@ addRole = () => {};
 
 //function to view all departments
 viewDepartments = () => {
-  const sql = `SELECT department.id AS id, department.name AS department FROM department`;
+  const sql = `SELECT department.id AS id, department.department_name AS department FROM department`;
 
   connection.query(sql, (err, rows) => {
     if (err) throw err;
