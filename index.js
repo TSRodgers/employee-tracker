@@ -73,6 +73,7 @@ const menuPrompt = () => {
 
       if (menuSelect === "Add Role") {
         console.log("You chose add role");
+        addRole();
       }
 
       if (menuSelect === "View All Departments") {
@@ -82,6 +83,7 @@ const menuPrompt = () => {
 
       if (menuSelect === "Add Department") {
         console.log("You chose add department");
+        addDepartment();
       }
 
       if (menuSelect === "Quit") {
@@ -213,7 +215,58 @@ viewRoles = () => {
 };
 
 //function to add role
-addRole = () => {};
+addRole = () => {
+  const depSelect = [];
+  connection.query("SELECT * FROM department", (err, res) => {
+    if (err) throw err;
+    res.forEach((dep) => {
+      let questO = {
+        name: dep.department_name,
+        department_id: dep.id,
+      };
+      depSelect.push(questO);
+    });
+
+    let questions = [
+      {
+        type: "input",
+        name: "title",
+        message: "What is the new role's title?",
+      },
+      {
+        type: "input",
+        name: "salary",
+        message: "What is the new role's salary?",
+      },
+      {
+        type: "list",
+        name: "department",
+        choices: depSelect,
+        message: "What department does this role belong to?",
+      },
+    ];
+
+    inquirer
+      .prompt(questions)
+      .then((response) => {
+        const query = `INSERT INTO role (title, salary, department_id) VALUES (?)`;
+        connection.query(
+          query,
+          [[response.title, response.salary, response.deparment]],
+          (err, res) => {
+            if (err) throw err;
+            console.log(
+              `Succesfully added ${response.title} role at id ${res.insertId}`
+            );
+            menuPrompt();
+          }
+        );
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  });
+};
 
 //function to view all departments
 viewDepartments = () => {
@@ -227,4 +280,28 @@ viewDepartments = () => {
 };
 
 //function to add department
-addDepartment = () => {};
+addDepartment = () => {
+  let questions = [
+    {
+      type: "input",
+      name: "department_name",
+      message: "What is the new department name?",
+    },
+  ];
+
+  inquirer
+    .prompt(questions)
+    .then((response) => {
+      const query = `INSERT INTO department (department_name) VALUES (?)`;
+      connection.query(query, [response.department_name], (err, res) => {
+        if (err) throw err;
+        console.log(
+          `Succesfully added ${response.department_name} department as id ${res.insertId}`
+        );
+        menuPrompt();
+      });
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+};
