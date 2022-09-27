@@ -27,19 +27,19 @@ VALUES
 
 SELECT * FROM role;
 
-INSERT INTO employee
+INSERT INTO employees
     (first_name, last_name, role_id, manager_id)
 VALUES
-    ("Traci", "Halcomb", 1),
-    ("Lila", "Ramos", 2),
-    ("Yvonne", "Hayes", 3, null),
-    ("Patrick", "Maillet", 4),
-    ("Mark", "Bassham", 5, null),
-    ("Michael", "Elsner", 6),
-    ("Janet", "Barnhill", 7, null),
-    ("Rita", "Kendall", 8, null),
-    ("Tania", "Feinstein", 9, null),
-    ("Andy", "Bryant", 10),
-    ("Joanne", "Roberts", 11, null);
+    ("Traci", "Halcomb", 1, null),
+    ("Lila", "Ramos", 2, 1),
+    ("Yvonne", "Hayes", 3, 2),
+    ("Patrick", "Maillet", 4, 1),
+    ("Mark", "Bassham", 5, 4),
+    ("Michael", "Elsner", 6, 1),
+    ("Janet", "Barnhill", 7, 6),
+    ("Rita", "Kendall", 8, 1),
+    ("Tania", "Feinstein", 9, 1),
+    ("Andy", "Bryant", 10, 1),
+    ("Joanne", "Roberts", 11, 10);
 
-SELECT * FROM employee;
+SELECT * FROM employees;

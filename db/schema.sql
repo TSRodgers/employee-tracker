@@ -17,7 +17,7 @@ CREATE TABLE role (
         ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE employee (
+CREATE TABLE employees (
     id INTEGER AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(30) NOT NULL,
     last_name VARCHAR(30) NOT NULL,
@@ -27,7 +27,7 @@ CREATE TABLE employee (
         REFERENCES role(id)
         ON DELETE RESTRICT ON UPDATE CASCADE,
     FOREIGN KEY (manager_id)
-        REFERENCES employee(id)
+        REFERENCES employees(id)
         ON DELETE SET NULL
         ON UPDATE CASCADE 
 );

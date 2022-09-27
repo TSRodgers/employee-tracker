@@ -59,6 +59,7 @@ const menuPrompt = () => {
 
       if (menuSelect === "Add Employee") {
         console.log("You chose add employee.");
+        addEmployee();
       }
 
       if (menuSelect === "Update Employee Role") {
@@ -92,17 +93,17 @@ const menuPrompt = () => {
 
 //function to view all employees
 viewEmployees = () => {
-  const sql = `SELECT employee.id, 
-    employee.first_name, 
-    employee.last_name, 
+  const sql = `SELECT employees.id, 
+    employees.first_name, 
+    employees.last_name, 
     role.title, 
     department.department_name AS department,
     role.salary, 
     CONCAT (manager.first_name, " ", manager.last_name) AS manager
-FROM employee
-    LEFT JOIN role ON employee.role_id = role.id
+FROM employees
+    LEFT JOIN role ON employees.role_id = role.id
     LEFT JOIN department ON role.department_id = department.id
-    LEFT JOIN employee manager ON employee.manager_id = manager.id`;
+    LEFT JOIN employees manager ON employees.manager_id = manager.id`;
 
   connection.query(sql, (err, rows) => {
     if (err) throw err;
@@ -112,7 +113,88 @@ FROM employee
 };
 
 //function to add employee
-addEmployee = () => {};
+addEmployee = () => {
+  connection.query("SELECT * FROM employees", (err, emplSel) => {
+    if (err) throw err;
+    const employeeSelect = [
+      {
+        name: "None",
+        value: 0,
+      },
+    ];
+    emplSel.forEach(({ first_name, last_name, id }) => {
+      employeeSelect.push({
+        name: first_name + " " + last_name,
+        value: id,
+      });
+    });
+
+    connection.query("SELECT * FROM role", (err, roleSel) => {
+      if (err) throw err;
+      const roleSelect = [];
+      roleSel.forEach(({ title, id }) => {
+        roleSelect.push({
+          name: title,
+          value: id,
+        });
+      });
+
+      let questions = [
+        {
+          type: "input",
+          name: "first_name",
+          message: "What is the employee's first name?",
+        },
+        {
+          type: "input",
+          name: "last_name",
+          message: "What is the employee's last name?",
+        },
+        {
+          type: "list",
+          name: "role_id",
+          choices: roleSelect,
+          message: "What is the employee's role?",
+        },
+        {
+          type: "list",
+          name: "manager_id",
+          choices: employeeSelect,
+          message: "Who is the employee's manager?",
+        },
+      ];
+
+      inquirer
+        .prompt(questions)
+        .then((response) => {
+          const query = `INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?)`;
+          let manager_id =
+            response.manager_id !== 0 ? response.manager_id : null;
+          connection.query(
+            query,
+            [
+              [
+                response.first_name,
+                response.last_name,
+                response.role_id,
+                manager_id,
+              ],
+            ],
+            (err, res) => {
+              if (err) throw err;
+              console.log(
+                `Succesfully added employee ${response.first_name} ${response.last_name} with id ${res.insertId}`
+              );
+              menuPrompt();
+            }
+          );
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    });
+  });
+};
 
 //function to update employee rolee
 updateRole = () => {};
