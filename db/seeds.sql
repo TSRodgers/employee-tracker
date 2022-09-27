@@ -8,6 +8,8 @@ values
     ("Customer Service"), 
     ("Accounting");
 
+SELECT * FROM department;
+
 INSERT INTO role
     (title, salary, department_id)
 VALUES
@@ -23,6 +25,8 @@ VALUES
     ("Director of acounting", 170000, 6),
     ("Accountant", 70000, 6);
 
+SELECT * FROM role;
+
 INSERT INTO employee
     (first_name, last_name, role_id, manager_id)
 VALUES
@@ -37,3 +41,5 @@ VALUES
     ("Tania", "Feinstein", 9, null),
     ("Andy", "Bryant", 10),
     ("Joanne", "Roberts", 11, null);
+
+SELECT * FROM employee;
