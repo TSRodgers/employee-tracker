@@ -54,6 +54,7 @@ const menuPrompt = () => {
 
       if (menuSelect === "View All Employees") {
         console.log("You chose view all employees.");
+        viewEmployees();
       }
 
       if (menuSelect === "Add Employee") {
@@ -74,6 +75,7 @@ const menuPrompt = () => {
 
       if (menuSelect === "View All Departments") {
         console.log("You chose view all departments");
+        viewDepartments();
       }
 
       if (menuSelect === "Add Department") {
@@ -86,3 +88,32 @@ const menuPrompt = () => {
       }
     });
 };
+
+//function to view all employees
+viewEmployees = () => {};
+
+//function to add employee
+addEmployee = () => {};
+
+//function to update employee rolee
+updateRole = () => {};
+
+//function to view all roles
+viewRoles = () => {};
+
+//function to add role
+addRole = () => {};
+
+//function to view all departments
+viewDepartments = () => {
+  const sql = `SELECT department.id AS id, department.name AS department FROM department`;
+
+  connection.query(sql, (err, rows) => {
+    if (err) throw err;
+    console.table(rows);
+    menuPrompt();
+  });
+};
+
+//function to add department
+addDepartment = () => {};
