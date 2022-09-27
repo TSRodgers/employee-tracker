@@ -64,6 +64,7 @@ const menuPrompt = () => {
 
       if (menuSelect === "Update Employee Role") {
         console.log("You chose update employee role.");
+        updateRole();
       }
 
       if (menuSelect === "View All Roles") {
@@ -199,7 +200,63 @@ addEmployee = () => {
 };
 
 //function to update employee rolee
-updateRole = () => {};
+updateRole = () => {
+  connection.query("SELECT * FROM employees", (err, emplSel) => {
+    if (err) throw err;
+    const employeeSelect = [];
+    emplSel.forEach(({ first_name, last_name, id }) => {
+      employeeSelect.push({
+        name: first_name + " " + last_name,
+        value: id,
+      });
+    });
+
+    connection.query("SELECT * FROM role", (err, roleSel) => {
+      if (err) throw err;
+      const roleSelect = [];
+      roleSel.forEach(({ title, id }) => {
+        roleSelect.push({
+          name: title,
+          value: id,
+        });
+      });
+
+      let questions = [
+        {
+          type: "list",
+          name: "id",
+          choices: employeeSelect,
+          message: "Whose role do you want to update?",
+        },
+        {
+          type: "list",
+          name: "role_id",
+          choices: roleSelect,
+          message: "What is the employee's new role?",
+        },
+      ];
+
+      inquirer
+        .prompt(questions)
+        .then((response) => {
+          const query = `UPDATE employees SET ? WHERE ?? = ?;`;
+          connection.query(
+            query,
+            [{ role_id: response.role_id }, "id", response.id],
+            (err, res) => {
+              if (err) throw err;
+
+              console.log("Succesfully updated employee's role.");
+              menuPrompt();
+            }
+          );
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    });
+  });
+};
 
 //function to view all roles
 viewRoles = () => {
